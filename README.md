@@ -1,0 +1,1 @@
+Studying project for GB on Django and DRF
