@@ -17,12 +17,12 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 from django.urls import path, include
-from django.views.generic import RedirectView
-import usersapp
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/', include('usersapp.urls', namespace='api')),
+    path('api/users/', include('usersapp.urls', namespace='users')),
+    path('api/todo/', include('todoapp.urls', namespace='todo')),
 ]
 
 if settings.DEBUG:
