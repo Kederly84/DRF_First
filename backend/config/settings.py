@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'usersapp',
     'corsheaders',
+    'todoapp',
 ]
 
 MIDDLEWARE = [
@@ -132,3 +133,10 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://192.168.31.61:3000",
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'djangorestframework_camel_case.render.CamelCaseJSONRenderer',
+        'djangorestframework_camel_case.render.CamelCaseBrowsableAPIRenderer',
+    ),
+}
