@@ -13,6 +13,7 @@ class User(AbstractUser):
     age = models.PositiveSmallIntegerField(verbose_name='Возраст', **NULLABLE)
     email = models.EmailField(unique=True, verbose_name='Email')
     avatar = models.ImageField(upload_to='users', **NULLABLE)
+    deleted = models.BooleanField(default=False, verbose_name='Пользователь не активен')
 
     class Meta:
         verbose_name = 'Пользователь'
