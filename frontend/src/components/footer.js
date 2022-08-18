@@ -14,34 +14,27 @@ function Footer() {
                 <MDBRow>
                     <MDBCol md="3" lg="4" xl="3" className='mx-auto mb-4'>
                         <h6 className='text-uppercase fw-bold mb-4'>
-                            Company name
+                            Home production
                         </h6>
                         <p>
-                            Here you can use rows and columns to organize your footer content. Lorem ipsum dolor sit
-                            amet,
-                            consectetur adipisicing elit.
+                            Here were go!!!
                         </p>
                     </MDBCol>
                     <MDBCol md="3" lg="2" xl="2" className='mx-auto mb-4'>
                         <h6 className='text-uppercase fw-bold mb-4'>Useful links</h6>
                         <p>
-                            <a href='frontend/components/footer#!' className='text-reset'>
-                                Link 1
+                            <a href='/users' className='text-reset'>
+                                Users
                             </a>
                         </p>
                         <p>
-                            <a href='frontend/components/footer#!' className='text-reset'>
-                                Link 2
+                            <a href='/projects' className='text-reset'>
+                                Projects
                             </a>
                         </p>
                         <p>
-                            <a href='frontend/components/footer#!' className='text-reset'>
-                                Link 3
-                            </a>
-                        </p>
-                        <p>
-                            <a href='frontend/components/footer#!' className='text-reset'>
-                                Link 4
+                            <a href='/notes' className='text-reset'>
+                                Notes
                             </a>
                         </p>
                     </MDBCol>
@@ -49,7 +42,7 @@ function Footer() {
                         <h6 className='text-uppercase fw-bold mb-4'>Contact</h6>
                         <p>
                             <MDBIcon icon="home" className="me-2"/>
-                            New York, NY 10012, US
+                            RF, Nizhny Novgorod
                         </p>
                         <p>
                             <MDBIcon icon="envelope" className="me-3"/>
@@ -57,9 +50,6 @@ function Footer() {
                         </p>
                         <p>
                             <MDBIcon icon="phone" className="me-3"/> + 01 234 567 88
-                        </p>
-                        <p>
-                            <MDBIcon icon="print" className="me-3"/> + 01 234 567 89
                         </p>
                     </MDBCol>
                 </MDBRow>
