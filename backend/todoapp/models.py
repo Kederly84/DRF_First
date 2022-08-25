@@ -27,6 +27,9 @@ class Project(BaseModel):
     project_users = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True,
                                       verbose_name='Пользователи')
 
+    def __str__(self):
+        return f'{self.project_name}'
+
     class Meta:
         verbose_name = 'Проект'
         verbose_name_plural = 'Проекты'

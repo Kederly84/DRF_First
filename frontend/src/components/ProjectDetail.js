@@ -27,7 +27,6 @@ const ProjectDetail = ({project}) => {
 
 const ProjectsDetailList = ({projects}) => {
     let { projectID } = useParams();
-    console.log(projectID)
     let filtered = projects.filter((project) => project.id === parseInt(projectID))
     return (
         <div className="justify-content-center my-2 mx-2">
