@@ -3,7 +3,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from .models import Project, Todo
-from .serializers import ProjectModelSerializer, ToDoModelSerializer
+from .serializers import ProjectModelSerializer, ToDoModelSerializer, ProjectModelBaseSerializer, ToDoModelBaseSerializer
 from rest_framework.renderers import JSONRenderer
 from django.http import HttpResponse
 from .filters import ProjectFilter, TodoFilter
@@ -33,6 +33,11 @@ class ProjectModelViewSet(ModelViewSet):
         instance.deleted = True
         instance.save()
 
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ProjectModelSerializer
+        return ProjectModelBaseSerializer
+
 
 class TodoModelViewSet(ModelViewSet):
     serializer_class = ToDoModelSerializer
@@ -43,3 +48,9 @@ class TodoModelViewSet(ModelViewSet):
     def perform_destroy(self, instance):
         instance.deleted = True
         instance.save()
+
+    def get_serializer_class(self):
+        if self.request.method in ['GET']:
+            return ToDoModelSerializer
+        return ToDoModelBaseSerializer
+
