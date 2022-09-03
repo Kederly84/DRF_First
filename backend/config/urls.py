@@ -22,6 +22,20 @@ from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+from drf_yasg.views import get_schema_view as schema
+from drf_yasg import openapi
+from django.views.generic import TemplateView
+from rest_framework.schemas import get_schema_view
+
+schema_view = schema(
+    openapi.Info(
+        title="ToDo",
+        default_version='1.0',
+        description='Documentation for my project',
+        contact=openapi.Contact(email='django@django.com'),
+        license=openapi.License(name='MIT License'),
+    ),
+)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -31,6 +45,16 @@ urlpatterns = [
     path('api-auth-token/', views.obtain_auth_token),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+    path('swagger/', schema_view.with_ui()),
+    path('swagger-ui/', TemplateView.as_view(
+        template_name='swagger-ui.html',
+        extra_context={'schema_url': 'openapi-schema'}
+    ), name='swagger-ui'),
+    path('openapi', get_schema_view(
+        title="My Project",
+        description="API",
+        version="1.0"
+    ), name='openapi-schema'),
 ]
 
 if settings.DEBUG:
