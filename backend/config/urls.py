@@ -26,6 +26,8 @@ from drf_yasg.views import get_schema_view as schema
 from drf_yasg import openapi
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
+from graphene_django.views import GraphQLView
+from django.views.decorators.csrf import csrf_exempt
 
 schema_view = schema(
     openapi.Info(
@@ -55,6 +57,7 @@ urlpatterns = [
         description="API",
         version="1.0"
     ), name='openapi-schema'),
+    path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
 ]
 
 if settings.DEBUG:
