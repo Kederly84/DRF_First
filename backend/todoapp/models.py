@@ -40,9 +40,9 @@ class Todo(BaseModel):
     note_header = models.CharField(max_length=64, verbose_name='Заголовок заметки', null=True)
     note_text = models.CharField(max_length=255, verbose_name='Текст заметки')
     is_active = models.BooleanField(default=True, verbose_name='Активность заметки')
-    note_user = models.OneToOneField(get_user_model(), on_delete=models.SET_NULL, null=True,
+    note_user = models.ForeignKey(get_user_model(), on_delete=models.SET_NULL, null=True,
                                      verbose_name='Автор заметки')
-    note_project = models.OneToOneField(Project, on_delete=models.CASCADE, verbose_name='Проект заметки')
+    note_project = models.ForeignKey(Project, on_delete=models.CASCADE, verbose_name='Проект заметки')
 
     class Meta:
         verbose_name = 'Заметка'

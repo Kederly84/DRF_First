@@ -1,6 +1,7 @@
 import React from 'react'
+import Button from 'react-bootstrap/Button';
 
-const NoteItem = ({note}) => {
+const NoteItem = ({note, deleteNote}) => {
     return (
         <tr>
             <td>
@@ -15,10 +16,13 @@ const NoteItem = ({note}) => {
             <td>
                 {note.noteUser.username}
             </td>
+            <td>
+                <Button variant="danger" onClick={() => deleteNote(note.id)} >Delete</Button>
+            </td>
         </tr>)
 }
 
-const NotesList = ({notes}) => {
+const NotesList = ({notes, deleteNote}) => {
     return (
         <table>
             <th>
@@ -33,8 +37,12 @@ const NotesList = ({notes}) => {
             <th>
                 Note User
             </th>
-            {notes.map((note) => <NoteItem note={note}/>)}
+            <th>
+                Delete
+            </th>
+            {notes.map((note) => <NoteItem note={note} deleteNote={deleteNote}/>)}
         </table>
     )
 }
+
 export default NotesList;
