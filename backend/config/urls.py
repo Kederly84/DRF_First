@@ -58,6 +58,13 @@ urlpatterns = [
         version="1.0"
     ), name='openapi-schema'),
     path('graphql/', csrf_exempt(GraphQLView.as_view(graphiql=True))),
+    path('', TemplateView.as_view(template_name='index.html')),
+    path('projects/', TemplateView.as_view(template_name='index.html')),
+    path('notes/', TemplateView.as_view(template_name='index.html')),
+    path('users/', TemplateView.as_view(template_name='index.html')),
+    path('login/', TemplateView.as_view(template_name='index.html')),
+    path('create_project/', TemplateView.as_view(template_name='index.html')),
+    path('create_note/', TemplateView.as_view(template_name='index.html')),
 ]
 
 if settings.DEBUG:

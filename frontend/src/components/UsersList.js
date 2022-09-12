@@ -4,6 +4,9 @@ const UserItem = ({user}) => {
     return (
         <tr>
             <td>
+                {user.id}
+            </td>
+            <td>
                 {user.username}
             </td>
             <td>
@@ -21,6 +24,9 @@ const UserItem = ({user}) => {
 const UsersList = ({users}) => {
     return (
         <table>
+            <th>
+                User ID
+            </th>
             <th>
                 Username
             </th>

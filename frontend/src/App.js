@@ -1,7 +1,6 @@
 import './App.css';
 import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css'
-// import NavigationBar from "./components/navbar";
 import Footer from "./components/footer";
 import UsersList from "./components/UsersList";
 import ProjectsList from "./components/ProjectList";
@@ -14,7 +13,25 @@ import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import ProjectForm from "./components/ProjectForm";
+import NoteForm from "./components/NoteForm";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
 
+
+const InterfaceStub = ({gotUsers, children}) => {
+    if (gotUsers.length) {
+        return (<div>{children}</div>)
+    }
+    return (<div>loading users</div>)
+}
+
+const InterfaceStubNotes = ({gotUsers, gotProjects, children}) => {
+    if (gotUsers.length && gotProjects.length) {
+        return (<div>{children}</div>)
+    }
+    return (<div>loading data</div>)
+}
 
 class App extends React.Component {
     constructor(props) {
@@ -23,15 +40,83 @@ class App extends React.Component {
             'users': [],
             'projects': [],
             'notes': [],
-            'token': ''
+            'token': '',
+            'redirect': false
         }
     }
 
+    createProject(projectName, description, projectUrl, projectUsers) {
+        let headers = this.getHeaders()
+        axios
+            .post('http://127.0.0.1:8000/api/todo/project/', {
+                'projectName': projectName,
+                'description': description,
+                'projectUrl': projectUrl,
+                'projectUsers': projectUsers
+            }, {headers})
+            .then(response => {
+                this.setState({
+                    'redirect': '/projects'
+                }, this.getData)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    createNote(noteProject, noteHeader, noteText, noteUser) {
+        let headers = this.getHeaders()
+        axios
+            .post('http://127.0.0.1:8000/api/todo/todo/', {
+                'noteProject': noteProject,
+                'noteHeader': noteHeader,
+                'noteText': noteText,
+                'noteUser': noteUser
+            }, {headers})
+            .then(response => {
+                this.setState({
+                    'redirect': '/notes'
+                }, this.getData)
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    deleteProject(projectID) {
+        let headers = this.getHeaders()
+        axios
+            .delete(`http://127.0.0.1:8000/api/todo/project/${projectID}/`, {headers})
+            .then(response => {
+                this.setState({
+                    'redirect': '/projects'
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+    deleteNote(noteID) {
+        let headers = this.getHeaders()
+        axios
+            .delete(`http://127.0.0.1:8000/api/todo/todo/${noteID}/`, {headers})
+            .then(response => {
+                this.setState({
+                    'redirect': '/projects'
+                })
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }
+
+
     obtainAuthToken(username, password) {
         axios.post('http://127.0.0.1:8000/api-auth-token/', {
-                'username': username,
-                'password': password
-            })
+            'username': username,
+            'password': password
+        })
             .then(response => {
                 const token = response.data.token
                 console.log('token:', token)
@@ -104,6 +189,21 @@ class App extends React.Component {
         }, this.getData)
     }
 
+    searchProjects(namePart) {
+        let headers = this.getHeaders()
+        axios.get('http://127.0.0.1:8000/api/todo/project/', {headers})
+            .then(response => {
+                if (namePart !== null && namePart !== "") {
+                    this.setState({'projects': this.state.projects.filter((project) => project.projectName.includes(namePart))})
+                } else {
+                    this.setState({'projects': response.data.results})
+                }
+            }).catch(error => {
+            console.log(error)
+            this.setState({'projects': []})
+        })
+    }
+
 
     render() {
         return (
@@ -121,12 +221,25 @@ class App extends React.Component {
                                     {this.isAuth() ? <Nav.Link onClick={() => this.logOut()}>Logout</Nav.Link> :
                                         <Nav.Link href='/login'>Login</Nav.Link>}
                                     <NavDropdown title="Menu" id="basic-nav-dropdown">
-                                        <NavDropdown.Item href="#action/3.1">Action</NavDropdown.Item>
-                                        <NavDropdown.Item href="#action/3.2">
-                                            Another action
+                                        <NavDropdown.Item href="/create_project">Create Project</NavDropdown.Item>
+                                        <NavDropdown.Item href="/create_note">
+                                            Create Note
                                         </NavDropdown.Item>
-                                        <NavDropdown.Item href="#action/3.3">Something</NavDropdown.Item>
+                                        <NavDropdown.Item href="#">Something</NavDropdown.Item>
                                     </NavDropdown>
+                                    <Form className="d-flex" onSubmit={(event) => {
+                                        event.preventDefault()
+                                        this.searchProjects(document.getElementById("searchProjects").value)
+                                    }}>
+                                        <Form.Control
+                                            type="search"
+                                            placeholder="Search project"
+                                            className="me-2"
+                                            aria-label="Search"
+                                            id="searchProjects"
+                                        />
+                                        <Button variant="outline-success" type="submit">Search</Button>
+                                    </Form>
                                 </Nav>
                             </Navbar.Collapse>
                         </Container>
@@ -134,11 +247,22 @@ class App extends React.Component {
                     <Routes>
                         <Route exact path='/' element={<Navigate to='/users'/>}/>
                         <Route exact path='/users' element={<UsersList users={this.state.users}/>}/>
-                        <Route exact path='/notes' element={<NotesList notes={this.state.notes}/>}/>
-                        <Route exact path='/login' element={<AuthForm obtainAuthToken={(username, password) => this.obtainAuthToken(username, password)}/>}/>
+                        <Route exact path='/notes' element={<NotesList notes={this.state.notes}
+                                                                       deleteNote={(noteID) => this.deleteNote(noteID)}/>}/>
+                        <Route exact path='/login' element={<AuthForm
+                            obtainAuthToken={(username, password) => this.obtainAuthToken(username, password)}/>}/>
+                        <Route exact path='/create_project'
+                               element={<InterfaceStub gotUsers={this.state.users}> <ProjectForm
+                                   users={this.state.users}
+                                   createProject={(projectName, description, projectUrl, projectUsers) => this.createProject(projectName, description, projectUrl, projectUsers)}/></InterfaceStub>}/>
+                        <Route exact path='/create_note' element={<InterfaceStubNotes gotUsers={this.state.users}
+                                                                                      gotProjects={this.state.projects}>
+                            <NoteForm projects={this.state.projects} users={this.state.users}
+                                      createProject={(noteProject, noteHeader, noteText, noteUser) => this.createNote(noteProject, noteHeader, noteText, noteUser)}/></InterfaceStubNotes>}/>
                         <Route path='/projects'>
                             <Route index element={<ProjectsList projects={this.state.projects}/>}/>
-                            <Route path=':projectID' element={<ProjectsDetailList projects={this.state.projects}/>}/>
+                            <Route path=':projectID' element={<ProjectsDetailList projects={this.state.projects}
+                                                                                  deleteProject={(projectID) => this.deleteProject(projectID)}/>}/>
                         </Route>
                     </Routes>
                 </BrowserRouter>
