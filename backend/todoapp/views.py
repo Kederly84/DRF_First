@@ -1,13 +1,13 @@
-from django.shortcuts import render, get_object_or_404
-from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
-from .models import Project, Todo
-from .serializers import ProjectModelSerializer, ToDoModelSerializer, ProjectModelBaseSerializer, ToDoModelBaseSerializer
-from rest_framework.renderers import JSONRenderer
-from django.http import HttpResponse
-from .filters import ProjectFilter, TodoFilter
 from rest_framework.pagination import LimitOffsetPagination
+from rest_framework.response import Response
+from rest_framework.viewsets import ModelViewSet
+
+from .filters import ProjectFilter, TodoFilter
+from .models import Project, Todo
+from .serializers import ProjectModelSerializer, ToDoModelSerializer, ProjectModelBaseSerializer, \
+    ToDoModelBaseSerializer
 
 
 class ProjectOffsetPagination(LimitOffsetPagination):
